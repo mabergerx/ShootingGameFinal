@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -14,6 +15,9 @@ public class Cannon {
     float x = -1; // Cannon's center (x,y)
     float y = -1;
     float stepX; // Cannon's step in  x direction
+
+    public static int xOffset, yOffset;
+
     int lowerX, lowerY, upperX, upperY;
     private Paint paint; // The paint style, color used for drawing
 
@@ -26,31 +30,12 @@ public class Cannon {
 
         mContext = c;
 
-        WindowManager w = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
-        Display d = w.getDefaultDisplay();
-        DisplayMetrics metrics = new DisplayMetrics();
-        d.getMetrics(metrics);
-// since SDK_INT = 1;
-        int widthPixels = metrics.widthPixels;
-        int heightPixels = metrics.heightPixels;
-// includes window decorations (statusbar bar/menu bar)
-        if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 17)
-            try {
-                widthPixels = (Integer) Display.class.getMethod("getRawWidth").invoke(d);
-                heightPixels = (Integer) Display.class.getMethod("getRawHeight").invoke(d);
-            } catch (Exception ignored) {
-            }
-// includes window decorations (statusbar bar/menu bar)
-        if (Build.VERSION.SDK_INT >= 17)
-            try {
-                Point realSize = new Point();
-                Display.class.getMethod("getRealSize", Point.class).invoke(d, realSize);
-                widthPixels = realSize.x;
-                heightPixels = realSize.y;
-            } catch (Exception ignored) {
-            }
 
-        stepX = (widthPixels/100)*8;
+
+        stepX = (DrawView.widthPixels/100)*8;
+
+        xOffset = (DrawView.widthPixels / 6) / 2;
+        yOffset = DrawView.heightPixels / 15;
 
     }
 
@@ -90,8 +75,8 @@ public class Cannon {
 
     // Draw the cannon on the canvas
     public void draw(Canvas canvas) {
-        canvas.drawLine(x, y - 100, x, y, paint);
-        canvas.drawRect(x - 30, y - 10, x + 30, y, paint);
-        canvas.drawRect(x - 10, y - 40, x + 10, y, paint);
+        canvas.drawLine(x, y - (yOffset * 1.5f), x, y, paint);
+        canvas.drawRect(x - xOffset, y - (yOffset / 4), x + xOffset, y, paint); // onderste blokje
+        canvas.drawRect(x - (xOffset / 3), y - yOffset, x + (xOffset / 3), y, paint); // bovenste blokje
     }
 }
