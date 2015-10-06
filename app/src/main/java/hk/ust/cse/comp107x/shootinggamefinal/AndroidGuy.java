@@ -18,7 +18,7 @@ public class AndroidGuy {
     float y;
     float wid;
     float hei;
-    float stepX = 10; // Guy's step in (x,y) direction
+    float stepX = 100; // Guy's step in (x,y) direction
     float stepY = 20; // gives speed of motion, larger means faster speed
     int lowerX, lowerY, upperX, upperY; // boundaries
     public boolean guyOutOfBounds = false;
