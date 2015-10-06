@@ -16,17 +16,19 @@ import android.view.WindowManager;
 public class AndroidGuy {
     float x; // Guy's top left corner (x,y)
     float y;
+    float rectWidth;
+    float rectHeight;
     float wid;
     float hei;
     float stepX = 10; // Guy's step in (x,y) direction
-    float stepY = 20; // gives speed of motion, larger means faster speed
+    float stepY; // gives speed of motion, larger means faster speed
     int lowerX, lowerY, upperX, upperY; // boundaries
+    int falltime = 5;
     public boolean guyOutOfBounds = false;
     private static final String TAG = AndroidGuy.class.getSimpleName();
 
 
     Bitmap android_guy;
-
 
     private Context mContext;
 
@@ -36,40 +38,23 @@ public class AndroidGuy {
 
         mContext = c;
 
-        WindowManager w = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
-        Display d = w.getDefaultDisplay();
-        DisplayMetrics metrics = new DisplayMetrics();
-        d.getMetrics(metrics);
-// since SDK_INT = 1;
-        int widthPixels = metrics.widthPixels;
-        int heightPixels = metrics.heightPixels;
-// includes window decorations (statusbar bar/menu bar)
-        if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 17)
-            try {
-                widthPixels = (Integer) Display.class.getMethod("getRawWidth").invoke(d);
-                heightPixels = (Integer) Display.class.getMethod("getRawHeight").invoke(d);
-            } catch (Exception ignored) {
-            }
-// includes window decorations (statusbar bar/menu bar)
-        if (Build.VERSION.SDK_INT >= 17)
-            try {
-                Point realSize = new Point();
-                Display.class.getMethod("getRealSize", Point.class).invoke(d, realSize);
-                widthPixels = realSize.x;
-                heightPixels = realSize.y;
-            } catch (Exception ignored) {
-            }
-
+        /*
         Log.i(TAG, "width: " + widthPixels);
         Log.i(TAG, "height: " + heightPixels);
         Log.i(TAG, "width/: " + (widthPixels/100)*10);
         Log.i(TAG, "height/: " + (heightPixels/100)*10);
+        */
         // create a bitmap from the supplied image (the image is the icon that is part of the app)
         android_guy = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(mContext.getResources(),
-                R.mipmap.ic_launcher),(widthPixels/100)*10,(heightPixels/100)*5, false);
+                R.mipmap.ic_launcher),(DrawView.widthPixels/100)*10,(DrawView.heightPixels/100)*5, false);
 
-        wid = widthPixels;
-        hei = heightPixels;
+        wid = DrawView.widthPixels;
+        hei = DrawView.heightPixels;
+
+        rectHeight = android_guy.getHeight();
+        rectWidth = android_guy.getWidth();
+
+        stepY = DrawView.heightPixels / (falltime * (1000 / DrawView.sleeptime));
     }
 
     public void setBounds(int lx, int ly, int ux, int uy) {
@@ -112,7 +97,7 @@ public class AndroidGuy {
 
     // Returns the rectangle enclosing the Guy. Used for collision detection
     public RectF getRect() {
-        return new RectF(x,y,x+50,y+50);
+        return new RectF(x,y,x+rectHeight,y+rectWidth);
     }
 
     public float getX() {

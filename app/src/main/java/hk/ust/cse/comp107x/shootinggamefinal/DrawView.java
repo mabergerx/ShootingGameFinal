@@ -6,13 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.logging.Handler;
@@ -22,6 +27,10 @@ import java.util.logging.LogRecord;
  * Created by muppala on 23/5/15.
  */
 public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
+
+    public static final int sleeptime = 30;
+
+    public static int widthPixels, heightPixels;
 
     private boolean gameOver_ = false;
     private int width, height;
@@ -40,9 +49,34 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     public DrawView(Context context, AttributeSet attrs) {
+
         super(context, attrs);
 
         mContext = context;
+
+        WindowManager w = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display d = w.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        d.getMetrics(metrics);
+// since SDK_INT = 1;
+        widthPixels = metrics.widthPixels;
+        heightPixels = metrics.heightPixels;
+// includes window decorations (statusbar bar/menu bar)
+        if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 17)
+            try {
+                widthPixels = (Integer) Display.class.getMethod("getRawWidth").invoke(d);
+                heightPixels = (Integer) Display.class.getMethod("getRawHeight").invoke(d);
+            } catch (Exception ignored) {
+            }
+// includes window decorations (statusbar bar/menu bar)
+        if (Build.VERSION.SDK_INT >= 17)
+            try {
+                Point realSize = new Point();
+                Display.class.getMethod("getRealSize", Point.class).invoke(d, realSize);
+                widthPixels = realSize.x;
+                heightPixels = realSize.y;
+            } catch (Exception ignored) {
+            }
 
         getHolder().addCallback(this);
 
@@ -122,7 +156,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
                     synchronized(surfaceHolder){
                         drawGameBoard(canvas);
                     }
-                    sleep(30);
+                    sleep(sleeptime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -253,7 +287,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     // Whenever the user shoots a bullet, create a new bullet moving upwards
     public void shootCannon() {
 
-        bullets.add(new Bullet(Color.RED, mContext, cannon.getPosition(), (float) (height - 40)));
+        bullets.add(new Bullet(Color.RED, mContext, cannon.getPosition(), (float) (height - Cannon.yOffset * 1.5f)));
 
     }
 
