@@ -67,9 +67,9 @@ public class ShootingGame extends AppCompatActivity implements View.OnClickListe
         Log.i("test", "width: " + width);
         Log.i("test", "height: " + height);
 
-        drawView.addLife(width - 50 , 30);
-        drawView.addLife(width - 150 , 30);
-        drawView.addLife(width - 300 , 30 );
+        drawView.addLife(width - (width * 0.05f + 5) , 30);
+        drawView.addLife(width - ((width * 0.05f) * 2 + 15) , 30);
+        drawView.addLife(width - ((width * 0.05f) * 3 + 25) , 30);
 
     }
 
