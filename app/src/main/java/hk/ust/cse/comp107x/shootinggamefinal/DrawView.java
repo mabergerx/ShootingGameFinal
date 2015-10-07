@@ -1,14 +1,18 @@
 package hk.ust.cse.comp107x.shootinggamefinal;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -18,9 +22,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.logging.Handler;
+//import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 /**
@@ -218,21 +223,20 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
            // Log.i("Drawview", "lives: " + lives.size());
             if (lives.get(i) != null) {
                 lives.get(i).draw(canvas);
-
-                if (androidGuy.guyOutOfBounds == true) {
+                if (androidGuy.guyOutOfBounds) {
                     //lives.get(i).removeLife();
-                    if (lives.size() == 0) {
+                    if (lives.size() >= 0) {
+                        lives.remove(i);
+                        androidGuy.guyInBounds();
+                        Log.i("DrawView", "Life removed." + "lives: " + lives.size());
+                    } else {
                         gameOver_ = true;
                         Log.i("over", "Game over!");
                         Intent intent = ((Activity) getContext()).getIntent();
                         getContext().startActivity(intent); //start the same activity again
                         ((Activity) getContext()).finish();
-                        //gameIsOver();
+                        gameIsOver();
                         break;
-                    } else {
-                        lives.remove(i);
-                        androidGuy.guyInBounds();
-                        Log.i("DrawView", "Life removed." + "lives: " + lives.size());
                     }
 
                 }
@@ -307,6 +311,33 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
        // Dialog dialog = new Dialog(mContext);
         // TODO Create a dialog that tells the user that game is over and his score
         // TODO and whether the highscore has been overwritten. Ask if wanna play again.
+
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                // Add the buttons
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(mContext,"user clicked yes", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(mContext,"user clicked no", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        };
+
+        handler.post(r);
 
     }
 

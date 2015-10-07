@@ -22,10 +22,20 @@ android {
         exclude 'LICENSE.txt'
     }
 }
+/*
+
+repositories {
+    maven { url "https://jitpack.io" }
+}
+*/
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
+
+ /*   compile('com.afollestad.material-dialogs:core:0.8.2.0@aar') {
+        transitive = true
+    }*/
 
     // Unit testing dependencies
     testCompile 'junit:junit:4.12'
