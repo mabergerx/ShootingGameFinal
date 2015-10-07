@@ -26,6 +26,7 @@ public class ShootingGame extends AppCompatActivity implements View.OnClickListe
     MediaPlayer player;
     boolean play_music = true;
     Menu menu;
+    static boolean no_beeps = false;
 
     public int height;
     public int width;
@@ -113,6 +114,16 @@ public class ShootingGame extends AppCompatActivity implements View.OnClickListe
                 player.start();
                 play_music=true;
                 menu.findItem(R.id.action_sound).setIcon(R.drawable.ic_volume_off_white_24dp);
+            }
+        }
+        else if (id == R.id.action_no_beeps) {
+            if (!no_beeps) {
+                no_beeps = true;
+                menu.findItem(R.id.action_no_beeps).setIcon(R.drawable.beep);
+            }
+            else {
+                no_beeps = false;
+                menu.findItem(R.id.action_no_beeps).setIcon(R.drawable.beepmute);
             }
         }
 

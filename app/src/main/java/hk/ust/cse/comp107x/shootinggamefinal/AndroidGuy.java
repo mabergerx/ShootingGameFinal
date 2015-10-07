@@ -76,7 +76,9 @@ public class AndroidGuy {
             guyOutOfBounds = true;
             reset();
             // Make the sound corresponding to the Android Guy falling down the bottom of screen
-            SoundEffects.INSTANCE.playSound(SoundEffects.SOUND_GUY);
+            if (!ShootingGame.no_beeps) {
+                SoundEffects.INSTANCE.playSound(SoundEffects.SOUND_GUY);
+            }
             return true;
         }
         else

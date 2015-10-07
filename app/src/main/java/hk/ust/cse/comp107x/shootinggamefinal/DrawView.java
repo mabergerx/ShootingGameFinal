@@ -28,9 +28,7 @@ import java.util.ArrayList;
 //import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
-/**
- * Created by muppala on 23/5/15.
- */
+
 public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static final int sleeptime = 30;
@@ -260,7 +258,9 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
                     androidGuy.reset();
                     bullets.remove(i);
                     // Play the explosion sound by calling the SoundEffects class
-                    SoundEffects.INSTANCE.playSound(SoundEffects.SOUND_EXPLOSION);
+                    if (!ShootingGame.no_beeps) {
+                        SoundEffects.INSTANCE.playSound(SoundEffects.SOUND_EXPLOSION);
+                    }
                     score.incrementScore();
                     break;
                 }

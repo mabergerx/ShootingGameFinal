@@ -11,7 +11,6 @@ import android.util.Log;
 import java.util.HashMap;
 
 /**
- * Created by muppala on 26/5/15.
  * This is an implementation of a Java Singleton class using the Enum approach. This creates
  * a single instance of the class that can be accessed anywhere using SoundEffects.INSTANCE
  */
