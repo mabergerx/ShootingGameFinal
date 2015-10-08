@@ -57,6 +57,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
         mContext = context;
 
+
         WindowManager w = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display d = w.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
@@ -137,7 +138,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
     public class DrawViewThread extends Thread{
         private SurfaceHolder surfaceHolder;
-        private boolean threadIsRunning = true;
+        public boolean threadIsRunning = true;
 
         public DrawViewThread(SurfaceHolder holder){
             surfaceHolder = holder;
@@ -189,7 +190,8 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     public void drawGameBoard(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);     //if you want another background color
+        canvas.drawColor(getResources().getColor(R.color.background_surface));
+        //if you want another background color
         // Draw the cannon
         cannon.draw(canvas);
 
@@ -217,24 +219,25 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
         // Handle all the lives. Draw them first, and remove them if Android Guy
         // falls out of bounds.
 
+        Log.i("Drawview", "Livescount:" + lives.size());
+        if(lives.size() == 0) {
+            Log.i("Drawview", "Empty lives");
+            gameOver_ = true;
+            Log.i("over", "Game over!");
+            gameIsOver();
+
+        }
+
         for (int i = lives.size()-1; i >= 0; i-- ) {
            // Log.i("Drawview", "lives: " + lives.size());
             if (lives.get(i) != null) {
                 lives.get(i).draw(canvas);
                 if (androidGuy.guyOutOfBounds) {
                     //lives.get(i).removeLife();
-                    if (lives.size() >= 0) {
+                    if (lives.size() > 0) {
                         lives.remove(i);
                         androidGuy.guyInBounds();
                         Log.i("DrawView", "Life removed." + "lives: " + lives.size());
-                    } else {
-                        gameOver_ = true;
-                        Log.i("over", "Game over!");
-                        Intent intent = ((Activity) getContext()).getIntent();
-                        getContext().startActivity(intent); //start the same activity again
-                        ((Activity) getContext()).finish();
-                        gameIsOver();
-                        break;
                     }
 
                 }
@@ -307,8 +310,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void gameIsOver() {
-        //stopGame();
-       // Dialog dialog = new Dialog(mContext);
+        stopGame();
         // TODO Create a dialog that tells the user that game is over and his score
         // TODO and whether the highscore has been overwritten. Ask if wanna play again.
 
@@ -322,6 +324,9 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(mContext,"user clicked yes", Toast.LENGTH_LONG).show();
+                   //     Intent intent = ((Activity) getContext()).getIntent();
+                       // getContext().startActivity(intent); //start the same activity again
+                        ((Activity) getContext()).recreate();
 
                     }
                 });
