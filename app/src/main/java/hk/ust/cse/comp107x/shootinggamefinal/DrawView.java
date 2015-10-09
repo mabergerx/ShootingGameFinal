@@ -294,7 +294,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     // Whenever the user shoots a bullet, create a new bullet moving upwards
     public void shootCannon() {
 
-        bullets.add(new Bullet(Color.RED, mContext, cannon.getPosition(), (float) (height - Cannon.yOffset * 1.5f)));
+        bullets.add(new Bullet(Color.RED, mContext, cannon.getPosition(), (height - Cannon.yOffset * 1.5f)));
 
     }
 
@@ -311,21 +311,17 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void gameIsOver() {
         stopGame();
-        // TODO Create a dialog that tells the user that game is over and his score
-        // TODO and whether the highscore has been overwritten. Ask if wanna play again.
-
         Handler handler = new Handler(Looper.getMainLooper());
 
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage("Your score is: " + score.getScore() + R.string.dialog_message);
                 // Add the buttons
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(mContext,"user clicked yes", Toast.LENGTH_LONG).show();
-                   //     Intent intent = ((Activity) getContext()).getIntent();
-                       // getContext().startActivity(intent); //start the same activity again
                         ((Activity) getContext()).recreate();
 
                     }
@@ -333,6 +329,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(mContext,"user clicked no", Toast.LENGTH_LONG).show();
+                        ((Activity) getContext()).finish();
 
                     }
                 });

@@ -63,7 +63,7 @@ public class AndroidGuy {
         upperX = ux;
         upperY = uy;
 
-        x = (float) ((upperX-50)*Math.random());
+        x = (float) ((upperX-((DrawView.widthPixels/100)*10))*Math.random());
         y = 0;
     }
 

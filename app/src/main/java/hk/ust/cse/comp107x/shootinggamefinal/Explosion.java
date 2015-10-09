@@ -7,9 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-/**
- * Created by muppala on 24/5/15.
- */
 public class Explosion {
     float x; // Ball's center (x,y)
     float y;
@@ -26,7 +23,7 @@ public class Explosion {
         mContext = c;
 
         explosion = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(mContext.getResources(),
-                R.drawable.explosion),50,50, false);
+                R.drawable.explosion),(DrawView.widthPixels/100)*10,(DrawView.heightPixels/100)*5, false);
 
         x = loc_x;
         y = loc_y;
