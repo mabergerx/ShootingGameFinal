@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -38,6 +39,8 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
     private boolean gameOver_ = false;
     private int width, height;
     private DrawViewThread drawviewthread;
+
+    private static final String TAG = DrawView.class.getSimpleName();
 
     Context mContext;
 
@@ -91,15 +94,14 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
         cannon = new Cannon(Color.BLUE,mContext);
 
         // create arraylists to keep track of bullets and explosions
-        bullets = new ArrayList<Bullet> ();
-        explosions = new ArrayList<Explosion>();
+        bullets = new ArrayList<> ();
+        explosions = new ArrayList<>();
 
         // create the falling Android Guy
         androidGuy = new AndroidGuy(Color.RED, mContext);
         score = new Score(Color.BLACK);
 
-        lives = new ArrayList<Lives>();
-
+        lives = new ArrayList<>();
 
     }
 
@@ -200,7 +202,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
             if (bullets.get(i) != null) {
                 bullets.get(i).draw(canvas);
 
-                if (bullets.get(i).move() == false) {
+                if (!bullets.get(i).move()) {
                     bullets.remove(i);
                 }
             }
@@ -210,7 +212,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
         // hits the Android Guy
         for (int i = 0; i < explosions.size(); i++ ) {
             if (explosions.get(i) != null) {
-                if (explosions.get(i).draw(canvas) == false) {
+                if (!explosions.get(i).draw(canvas)) {
                     explosions.remove(i);
                 }
             }
@@ -219,25 +221,23 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
         // Handle all the lives. Draw them first, and remove them if Android Guy
         // falls out of bounds.
 
-        Log.i("Drawview", "Livescount:" + lives.size());
+        Log.i(TAG, "Livescount:" + lives.size());
         if(lives.size() == 0) {
-            Log.i("Drawview", "Empty lives");
+            Log.i(TAG, "Empty lives");
             gameOver_ = true;
-            Log.i("over", "Game over!");
+            Log.i(TAG, "Game over!");
             gameIsOver();
 
         }
 
         for (int i = lives.size()-1; i >= 0; i-- ) {
-           // Log.i("Drawview", "lives: " + lives.size());
             if (lives.get(i) != null) {
                 lives.get(i).draw(canvas);
                 if (androidGuy.guyOutOfBounds) {
-                    //lives.get(i).removeLife();
                     if (lives.size() > 0) {
                         lives.remove(i);
                         androidGuy.guyInBounds();
-                        Log.i("DrawView", "Life removed." + "lives: " + lives.size());
+                        Log.i(TAG, "Life removed." + "lives: " + lives.size());
                     }
 
                 }
@@ -265,6 +265,7 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
                         SoundEffects.INSTANCE.playSound(SoundEffects.SOUND_EXPLOSION);
                     }
                     score.incrementScore();
+                    score.newHighscore(score.getScore());
                     break;
                 }
 
@@ -272,14 +273,13 @@ public class DrawView extends SurfaceView implements SurfaceHolder.Callback {
 
 
 
-            if (androidGuy.move() == false) {
+            if (!androidGuy.move()) {
                 androidGuy = null;
             }
         }
         score.draw(canvas);
 
     }
-
 
 
     // Move the cannon left or right

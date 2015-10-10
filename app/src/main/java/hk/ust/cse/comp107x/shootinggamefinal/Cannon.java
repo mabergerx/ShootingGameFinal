@@ -12,6 +12,9 @@ import android.view.WindowManager;
 
 
 public class Cannon {
+
+    private static final String TAG = Cannon.class.getSimpleName();
+
     float x = -1; // Cannon's center (x,y)
     float y = -1;
     float stepX; // Cannon's step in  x direction
@@ -21,14 +24,13 @@ public class Cannon {
     int lowerX, lowerY, upperX, upperY;
     private Paint paint; // The paint style, color used for drawing
 
-    private Context mContext;
 
     // Constructor
     public Cannon(int color, Context c) {
         paint = new Paint();
         paint.setColor(color);
 
-        mContext = c;
+       Context mContext = c;
 
 
 

@@ -11,16 +11,16 @@ import android.util.Log;
  */
 public class Lives {
 
+    private static final String TAG = Lives.class.getSimpleName();
+
     public static int lifeWidth;
 
     float x;
     float y;
-    public int numberOfLives = 3;
-    public boolean gameOver;
 
     public static Bitmap life;
 
-    private Context mContext;
+    Context mContext;
 
     public Lives(Context c, float posx, float posy) {
 
@@ -34,7 +34,7 @@ public class Lives {
 
         lifeWidth = life.getWidth();
 
-        Log.i("Lives: " , "life width: " + lifeWidth);
+        Log.i(TAG, "life width: " + lifeWidth);
     }
 
   /*  public boolean removeLife() {

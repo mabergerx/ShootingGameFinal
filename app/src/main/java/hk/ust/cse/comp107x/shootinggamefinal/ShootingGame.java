@@ -1,6 +1,7 @@
 package hk.ust.cse.comp107x.shootinggamefinal;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
@@ -30,6 +31,7 @@ public class ShootingGame extends AppCompatActivity implements View.OnClickListe
 
     public int height;
     public int width;
+    public static int global_highscore;
 
 
 
@@ -68,10 +70,21 @@ public class ShootingGame extends AppCompatActivity implements View.OnClickListe
         Log.i("test", "width: " + width);
         Log.i("test", "height: " + height);
 
-        drawView.addLife(width - (width * 0.05f + 5) , 30);
+        drawView.addLife(width - (width * 0.05f + 5), 30);
         drawView.addLife(width - ((width * 0.05f) * 2 + 15) , 30);
         drawView.addLife(width - ((width * 0.05f) * 3 + 25) , 30);
 
+        SharedPreferences preferences = this.getSharedPreferences("myHighscore", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("highscore", Score.highscore);
+        editor.commit();
+
+
+        //getting preferences
+        SharedPreferences prefs = this.getSharedPreferences("myHighscore", Context.MODE_PRIVATE);
+        int highscore = prefs.getInt("highscore", 0);
+
+        global_highscore = highscore;
     }
 
     @Override
@@ -116,7 +129,7 @@ public class ShootingGame extends AppCompatActivity implements View.OnClickListe
                 menu.findItem(R.id.action_sound).setIcon(R.drawable.ic_volume_off_white_24dp);
             }
         }
-        else if (id == R.id.action_no_beeps) {
+      /*  else if (id == R.id.action_no_beeps) {
             if (!no_beeps) {
                 no_beeps = true;
                 menu.findItem(R.id.action_no_beeps).setIcon(R.drawable.beep);
@@ -125,7 +138,7 @@ public class ShootingGame extends AppCompatActivity implements View.OnClickListe
                 no_beeps = false;
                 menu.findItem(R.id.action_no_beeps).setIcon(R.drawable.beepmute);
             }
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

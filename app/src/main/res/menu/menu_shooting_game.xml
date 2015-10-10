@@ -3,8 +3,8 @@
       xmlns:tools="http://schemas.android.com/tools" tools:context=".ShootingGame">
       <item android:id="@+id/action_sound" android:icon="@drawable/ic_volume_off_white_24dp"
             android:orderInCategory="1" app:showAsAction="always" />
-      <item android:id ="@+id/action_no_beeps" android:icon="@drawable/beepmute"
-            android:orderInCategory="2" app:showAsAction="always" />
+      <!--<item android:id ="@+id/action_no_beeps" android:icon="@drawable/beepmute"
+            android:orderInCategory="2" app:showAsAction="always" />-->
       <item android:id="@+id/action_settings" android:title="@string/action_settings"
             android:orderInCategory="100" app:showAsAction="never" />
 </menu>
